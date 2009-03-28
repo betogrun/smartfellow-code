@@ -1,0 +1,107 @@
+<html>
+<head>
+  <title>OpenLayers Example</title>
+<link rel="stylesheet" href="OpenLayers-2.7/theme/default/style.css" type="text/css" />
+ 	   <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA2yxX3K8yOD8C7jGoWmfashTZPJeBVpj0aGKSYFIngZKgg2s-CRRN3yk1-F7pxLmRA4OFNl6ahX4idg"
+      type="text/javascript"></script>
+
+
+	<script src="OpenLayers-2.7/OpenLayers.js" type="text/javascript"></script>
+
+
+
+    </head>
+    <body onload="init()">
+      <div style="width: 600px; height: 300px" id="map"></div>
+      <script defer="defer" type="text/javascript">
+      
+    var map;
+    var lonlat;
+    var loc;
+    var icon;
+    var markers;
+
+    var options = {'maxResolution': 'auto',
+
+	controls: [
+                        new OpenLayers.Control.PanZoomBar(),
+                        new OpenLayers.Control.MouseToolbar(),
+                        new OpenLayers.Control.LayerSwitcher({'ascending':false}),           
+                        new OpenLayers.Control.ScaleLine(),                        
+                        new OpenLayers.Control.MousePosition(),
+                        new OpenLayers.Control.OverviewMap(),
+                        new OpenLayers.Control.KeyboardDefaults()
+                    ],
+                    numZoomLevels: 14
+	};
+
+    var map = new OpenLayers.Map('map', options);
+
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    map.addLayer(markers);
+    var size = new OpenLayers.Size(20,34);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
+    var proj = new OpenLayers.Projection("EPSG:4326");
+
+    function addMarker() {
+
+        var handler = XMLHttpRequest(); 
+        handler.onreadystatechange=function() {
+        if (handler.readyState == 4 && handler.status == 200)
+        lonlat = handler.responseText; 
+        lonlat = lonlat.split(',');
+            if (lonlat[1]) {
+            	var point = new OpenLayers.LonLat(lonlat[1],lonlat[0]);
+		<!--point.transform(proj, map.getProjectionObject());-->
+		markers.addMarker(new OpenLayers.Marker(point, icon));
+
+		<!-- map.setCenter( loc, 5); -->  
+
+       }
+     }
+   
+   handler.open("GET", "/cgi-bin/php_teste_gpsd1.php", true);
+   handler.setRequestHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+   handler.setRequestHeader("Cache-Control", "post-check=0, pre-check=0");
+   handler.setRequestHeader("Pragma", "no-cache");
+
+   handler.send('');   
+   setTimeout(addMarker, '2000');
+   
+}
+
+    function init(){
+	var ol_wms = new OpenLayers.Layer.WMS( 
+		"OpenLayers WMS", 
+        	"http://labs.metacarta.com/wms/vmap0",
+		 {layers: 'basic'} );
+ 
+	var gphy = new OpenLayers.Layer.Google(
+                "Google Physical",
+                {type: G_PHYSICAL_MAP, numZoomLevels: 15}
+            );
+            var gmap = new OpenLayers.Layer.Google(
+                "Google Streets", // the default
+                {numZoomLevels: 20}
+            );
+            var ghyb = new OpenLayers.Layer.Google(
+                "Google Hybrid",
+                {type: G_HYBRID_MAP, numZoomLevels: 20}
+            );
+            var gsat = new OpenLayers.Layer.Google(
+                "Google Satellite",
+                {type: G_SATELLITE_MAP, numZoomLevels: 20}
+            );
+
+
+            map.addLayers([ol_wms, gphy, gmap, ghyb, gsat]);
+
+            map.setCenter( new OpenLayers.LonLat(13.740000,54.180000), 8); 
+	
+	addMarker();
+	}
+      </script>
+
+</body>
+</html>
