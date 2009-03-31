@@ -1,0 +1,13 @@
+How to install SmartFellow
+
+You must have PHP >= 5.2
+Unpack the files in your webserver directory.
+ 
+If everything is fine, perform the following steps:
+
+1) Start gpsd, giving the path to a serial or USB port with a GPS attached to it.
+2) Start your webserver.
+3) Type the follow adress in your web browser:
+ http://localhost/smartfellow/smfellow.html
+	
+

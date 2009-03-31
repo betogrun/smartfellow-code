@@ -1,0 +1,10 @@
+SmartFellow
+
+At the moment, SmartFellow is a web app that shows the user's current position in a map on OpenLayers. SmartFellow acesses GPSD to retrieve gps data.
+
+SmartFellow needs gpsd up and running to display user's current position. For information on how to build, install and use GPSD see:
+ http://svn.berlios.de/svnroot/repos/gpsd/trunk/INSTALL
+
+Some webserver is also necessary. Most distros delivers Apache by default.
+
+See the INSTALL file to get SmartFellow working
